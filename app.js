@@ -1,11 +1,17 @@
 var express = require('express'),
-    app = express();
+    app = express(),
+    path = require('path')
 
-// next parameter ensures that other routes are looked
-// for and should be used
-app.route('/').get(function(req, res, next){
-  res.send('<h1> Hello World </h1>');
-})
+app.set('views', path.join(__dirname, 'views'));
+
+// Uses hogan templating engine
+app.engine('html', require('hogan-express'));
+app.set('view engine', 'html');
+
+// Set access to static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+require('./routes/routes.js')(express, app);
 
 app.listen(3000, '0.0.0.0', function(){
   console.log('working on port 3000');
