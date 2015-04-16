@@ -1,6 +1,8 @@
 var express = require('express'),
     app = express(),
-    path = require('path')
+    path = require('path'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session')
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -10,6 +12,9 @@ app.set('view engine', 'html');
 
 // Set access to static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cookieParser());
+app.use(session({secret: "blackcatmoan", saveUninitialized:true, resave:true}));
 
 require('./routes/routes.js')(express, app);
 
