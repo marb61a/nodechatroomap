@@ -4,7 +4,8 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     config = require('./config/config.js'),
-    ConnectMongo = require('connect-mongo')(session)
+    ConnectMongo = require('connect-mongo')(session),
+    mongoose = require('mongoose').connect(config.dbURL)
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -19,16 +20,26 @@ app.use(cookieParser());
 
 var env = process.env.NODE_ENV ||'development';
 if(env === 'development'){
+  // Development Environment specific settings
   app.use(session({secret:config.sessionSecret}));
 }else{
+  // Production Environment settings
   app.use(session({
     secret: config.sessionSecret,
     store: new ConnectMongo({
-      url:config.dbURL,
+      //url:config.dbURL,
+      mongoose_connection : mongoose.connections[0],
       stringify:true
     })
   }))
 }
+
+var userSchema = mongoose.Schema({
+  username:String,
+  password:String,
+  fullname:String
+})
+
 
 require('./routes/routes.js')(express, app);
 
