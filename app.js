@@ -5,7 +5,9 @@ var express = require('express'),
     session = require('express-session'),
     config = require('./config/config.js'),
     ConnectMongo = require('connect-mongo')(session),
-    mongoose = require('mongoose').connect(config.dbURL)
+    mongoose = require('mongoose').connect(config.dbURL),
+    passport = require('passport'),
+    FacebookStrategy = require('passport-facebook').Strategy; // Must be included to use facebook authentication
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -27,7 +29,6 @@ if(env === 'development'){
   app.use(session({
     secret: config.sessionSecret,
     store: new ConnectMongo({
-      //url:config.dbURL,
       mongoose_connection : mongoose.connections[0],
       stringify:true
     })
@@ -41,8 +42,12 @@ var userSchema = mongoose.Schema({
 })
 
 
+require('./auth/passportAuth.js')(passport, FacebookStrategy, config, mongoose);
+
 require('./routes/routes.js')(express, app);
 
+
+// Nitrous.io listens on 0.0.0.0 instead of 127.0.0.0
 app.listen(3000, '0.0.0.0', function(){
   console.log('working on port 3000');
 });
