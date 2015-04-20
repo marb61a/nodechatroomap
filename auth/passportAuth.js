@@ -1,4 +1,4 @@
-module.exports = function(){
+module.exports = function(passport, FacebookStrategy, config, mongoose){
   
   var chatUser = new mongoose.Schema({
     profileID : String,
@@ -13,7 +13,7 @@ module.exports = function(){
     done(null, userID);
   })
   
-  passport.deSerializeUser(function(id, done){
+  passport.deserializeUser(function(id, done){
     userModel.findById(id, function(err, user){
       done(err, user);
     })

@@ -1,21 +1,28 @@
-module.exports = function(express, app){
+module.exports = function(express, app, passport){
   var router = express.Router();
   router.get('/', function(req, res, next){
     res.render('index', {title: 'Welcome to Node Chat App'})
   })
   
-  router.get('/chatrooms', function(req, res, next){
-    res.render('chatrooms', {title: 'Chat Rooms'})
-  })
+  function securePages(req, res, next){
+    if(req.isAuthenticated()){
+      next();
+    } else{
+      res.redirect('/');
+    }
+  }
   
-  router.get('/setcolor', function(req, res, next){
-    req.session.favColor = "Red";
-    res.send("Setting Favourite Colour ");
-  })
+  router.get('/auth/facebook', passport.authenticate('facebook'));
+  router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect : '/chatrooms',
+    failureRedirect : '/'
+  }))
   
-  router.get('/getcolor', function(req, res, next){
-    res.send("Favourite Colour is : " + (req.session.favColor===undefined?"Not Found":req.session.favColor))
+  
+  router.get('/chatrooms', securePages, function(req, res, next){
+    res.render('chatrooms', {title : 'Chatrooms', user : req.user})
   })
+
   
   
   app.use('/', router);
