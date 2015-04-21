@@ -6,5 +6,6 @@
             "appID" : "841903975885497",
             "appSecret" : "8af1772377e1b4f5d4e6a8689326229f",
             "callbackURL" : "http://0.0.0.0:3000/auth/facebook/callback"
-        }
+        },
+  "host" : "http://0.0.0.0:3000"
 }

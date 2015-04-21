@@ -9,7 +9,7 @@
 	<script>
 	$(function(){
 		var host = '{{config.host}}';
-		var socket = io.connect(host + '/roomlist'); // http://localhost:3000/roomlist
+		var socket = io.connect(host + '/roomlist'); // http://0.0.0.0:3000/roomlist
 
 		socket.on('connect', function(){
 			console.log('Connection Established !');
@@ -23,8 +23,6 @@
 				$('.roomlist').prepend(str);
 			}
 		})
-
-
 
 		$(document).on('click', '#create', function(){
 			var room_name = $('.newRoom').val();
@@ -50,9 +48,6 @@
 		</div>
 		<div class="cr-roomlist">
 			<ul class="roomlist">
-				<!-- <a href="#"><li>NodeJS</li></a>
-				<a href="#"><li>Cloud Computing</li></a>
-				<a href="#"><li>MongoDB</li></a> -->
 			</ul>
 		</div>
 	</div>

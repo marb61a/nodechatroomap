@@ -7,8 +7,9 @@ var express = require('express'),
     ConnectMongo = require('connect-mongo')(session),
     mongoose = require('mongoose').connect(config.dbURL),
     passport = require('passport'),
-    FacebookStrategy = require('passport-facebook').Strategy; // Must be included to use facebook authentication
-
+    FacebookStrategy = require('passport-facebook').Strategy, // Must be included to use facebook authentication
+    rooms = []
+    
 app.set('views', path.join(__dirname, 'views'));
 
 // Uses hogan templating engine
@@ -46,7 +47,7 @@ app.use(passport.session());
 
 require('./auth/passportAuth.js')(passport, FacebookStrategy, config, mongoose);
 
-require('./routes/routes.js')(express, app, passport);
+require('./routes/routes.js')(express, app, passport, config);
 
 
 // Nitrous.io listens on 0.0.0.0 instead of 127.0.0.0
@@ -54,10 +55,10 @@ require('./routes/routes.js')(express, app, passport);
 //  console.log('working on port 3000');
 // });
 
-app.set('port', process.ENV.PORT || 3000);
+app.set('port', process.env.PORT || 3000);
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-require('./socket/socket.js')(io);
+require('./socket/socket.js')(io, rooms);
 
 server.listen(app.get('port', function(){
   console.log('Chat on port: ' + app.get('port'))
