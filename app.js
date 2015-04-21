@@ -50,6 +50,15 @@ require('./routes/routes.js')(express, app, passport);
 
 
 // Nitrous.io listens on 0.0.0.0 instead of 127.0.0.0
-app.listen(3000, '0.0.0.0', function(){
-  console.log('working on port 3000');
-});
+// app.listen(3000, '0.0.0.0', function(){
+//  console.log('working on port 3000');
+// });
+
+app.set('port', process.ENV.PORT || 3000);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+require('./socket/socket.js')(io);
+
+server.listen(app.get('port', function(){
+  console.log('Chat on port: ' + app.get('port'))
+}))
