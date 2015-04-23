@@ -9,7 +9,7 @@
 	<script>
 	$(function(){
 		var host = '{{config.host}}';
-		var socket = io.connect(host + '/roomlist'); // http://0.0.0.0:3000/roomlist
+		var socket = io.connect(host + '/roomlist'); // http://localhost:3000/roomlist
 
 		socket.on('connect', function(){
 			console.log('Connection Established !');
