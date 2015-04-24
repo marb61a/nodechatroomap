@@ -36,12 +36,6 @@ if(env === 'development'){
   }))
 }
 
-var userSchema = mongoose.Schema({
-  username:String,
-  password:String,
-  fullname:String
-})
-
 app.use(passport.initialize());
 app.use(passport.session());
 
