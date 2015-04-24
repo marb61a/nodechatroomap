@@ -1,6 +1,7 @@
 module.exports = function(io, rooms){
   var chatrooms = io.of('/roomlist').on('connection', function(socket){
     console.log('Connection established on the server')
+    socket.emit('roomupdate', JSON.stringify(rooms));
     
     socket.on('newroom', function(data){
       rooms.push(data);
@@ -20,16 +21,19 @@ module.exports = function(io, rooms){
     })
     
     socket.on('newMessage', function(data){
-      socket.broadcast.to(data.room_number).emit('roomupdate', JSON.stringify(rooms));
+      socket.broadcast.to(data.room_number).emit('messagefeed', JSON.stringify(rooms));
     })
     
-    function updateUserList(room){
+    function updateUserList(room, updateAll){
       var getUsers = io.of('/messages').client(rooms);
       var userlist = [];
       for(var i in getUsers){
         userlist.push({user:getusers[i].username, userPic:getusers[i].userPic});
       }
       socket.to(room).emit('updateUsersList', JSON.stringify(userlist));
+      if(updateAll){
+				socket.broadcast.to(room).emit('updateUsersList', JSON.stringify(userlist));
+			}
     }
     
     socket.on('updateList', function(data){

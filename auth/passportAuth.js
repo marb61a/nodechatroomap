@@ -10,7 +10,7 @@ module.exports = function(passport, FacebookStrategy, config, mongoose){
   
   // User ID is stored in the session
   passport.serializeUser(function(user, done){
-    done(null, userID);
+    done(null, user.id);
   })
   
   passport.deserializeUser(function(id, done){
@@ -34,7 +34,7 @@ module.exports = function(passport, FacebookStrategy, config, mongoose){
         done(null, result)
       }else{
         // Create new user
-        var newChatUser = new usermodel({
+        var newChatUser = new userModel({
           profileID : profile.id,
           fullname : profile.displayName,
           profilePic : profile.photos[0].value || ''
